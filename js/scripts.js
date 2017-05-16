@@ -30,10 +30,17 @@ $(document).ready(function(){
 		// the deck is now shuffled big time!
 		// Update the player and dealers hand
 		// The player ALWAYS gets the first card in teh deck.
-		playersHand.push(theDeck.shift());
-		dealersHand.push(theDeck.shift());
-		playersHand.push(theDeck.shift());
-		dealersHand.push(theDeck.shift());
+		var removedCard = theDeck.shift()
+		playersHand.push(removedCard);
+
+		removedCard = theDeck.shift()
+		dealersHand.push(removedCard);
+
+		removedCard = theDeck.shift()
+		playersHand.push(removedCard);
+
+		removedCard = theDeck.shift()
+		dealersHand.push(removedCard);
 
 		console.log(theDeck.length);
 		placeCard('player',1,playersHand[0]);
@@ -41,7 +48,37 @@ $(document).ready(function(){
 		placeCard('player',2,playersHand[1]);
 		placeCard('dealer',2,dealersHand[1]);
 
+		calculateTotal(playersHand, 'player');
+		calculateTotal(dealersHand, 'dealer');
+
 	});
+
+	$('.hit-button').click(function(){
+		console.log("User clicked hit")
+		playersHand.push(theDeck.shift());
+		placeCard('player',playersHand.length,playersHand[playersHand.length-1])
+		calculateTotal(playersHand,'player');
+
+	});
+
+	function calculateTotal(hand,who){
+		// console.log(hand);
+		// init total at 0;
+		var total = 0;
+		// create a temp value for this card's value
+		var thisCardValue = 0;
+		// Loop through the hand (array)
+		// Grab the number in the element and add it the total
+		for(let i = 0; i < hand.length; i++){
+			thisCardValue = Number(hand[i].slice(0,-1));
+			// console.log(thisCardValue);
+			total += thisCardValue
+		}
+
+		console.log(total);
+		var classSelector = '.' + who + '-total';
+		$(classSelector).html(total);
+	}
 
 	function placeCard(who,where,cardToPlace){
 		var classSelector = '.' + who + '-cards .card-' + where;
