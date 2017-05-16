@@ -58,8 +58,38 @@ $(document).ready(function(){
 		playersHand.push(theDeck.shift());
 		placeCard('player',playersHand.length,playersHand[playersHand.length-1])
 		calculateTotal(playersHand,'player');
-
 	});
+
+	$('.stand-button').click(function(){
+		// console.log("User clicked on stand!");
+		// What happens to the player when they stand?
+		// Nothing.
+		// Control goes to the dealer.
+		// RUles of BlackJack for dealer:
+		// - if I have less than 17, I MUST hit.
+		// - if I have 17 or more I CANNOT hit.
+		var dealerTotal = calculateTotal(dealersHand, 'dealer');
+		// console.log(dealerTotal);
+		while(dealerTotal < 17){
+			dealersHand.push(theDeck.shift());
+			placeCard('dealer',dealersHand.length,dealersHand[dealersHand.length-1])
+			dealerTotal = calculateTotal(dealersHand, 'dealer');
+		}
+		checkWin();
+	});
+
+	function checkWin(){
+		var playerTotal = calculateTotal(playersHand, 'player');
+		var dealerTotal = calculateTotal(playersHand, 'dealer');
+
+		// if player > 21 ... player busts and loses.
+		// If dealer > 21 ... dealer busts and losers.
+		// if playersHand.length = 2 AND playerTotal = 21... BLACKJACK
+		// if dealersHand.length = 2 AND dealerTotal = 21... BLACKJACK
+		// if player > dealer ... player wins
+		// if dealer > player ... dealer wins
+		// else... tie.
+	}
 
 	function calculateTotal(hand,who){
 		// console.log(hand);
@@ -78,6 +108,7 @@ $(document).ready(function(){
 		console.log(total);
 		var classSelector = '.' + who + '-total';
 		$(classSelector).html(total);
+		return total;
 	}
 
 	function placeCard(who,where,cardToPlace){
