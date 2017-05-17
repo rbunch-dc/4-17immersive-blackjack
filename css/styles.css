@@ -25,5 +25,14 @@ img{
 	/* border: #277714 10px solid; */
 	margin: 10px;
 	width: 12.6%;
-	float: left;
+	/* float: left; */
+	position: relative;
+	transition: all 4s ease;
+	bottom: -300px;
+	display: inline-block;
+	/* border: solid 2px s; */
+}
+
+.dealt{
+	bottom: 0px;
 }

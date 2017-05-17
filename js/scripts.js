@@ -32,11 +32,15 @@ $(document).ready(function(){
 
 		// Chnage the DOM to add teh images
 		// placeCard(DoM name of who, card-X for slot, card value to send)
-		placeCard('player',1,playersHand[0]);
-		placeCard('player',2,playersHand[1]);
 
-		placeCard('dealer',1,dealersHand[0]);
-		placeCard('dealer',2,dealersHand[1]);
+		setTimeout(function(){placeCard('player',1,playersHand[0]);},200)
+		
+		setTimeout(function(){placeCard('player',2,playersHand[1]);},1600)
+
+		setTimeout(function(){placeCard('dealer',1,dealersHand[0]);},800)
+		setTimeout(function(){placeCard('dealer',2,dealersHand[1]);},2000)
+
+
 
 		calculateTotal(playersHand,'player');
 		calculateTotal(dealersHand,'dealer');
@@ -163,6 +167,7 @@ $(document).ready(function(){
 		// console.log(slotForCard);
 		imageTag = '<img src="images/cards/'+what+'.png">';
 		$(slotForCard).html(imageTag)
+		$(slotForCard).addClass('dealt')
 	}
 
 
