@@ -1,22 +1,27 @@
-.card img{
-	max-height: 120px;
+img{
+	max-width: 100%;
 }
-/* h1{
-	color: blue;
-} */
 
 .the-table{
 	background-color: #277714;
-	border: 5px solid #dcdcdc;
-	border-radius: 10px;
-	margin-top: 50px;
+	border: 5px dashed #dcdcdc;
 	padding: 30px 0px;
+	margin-top: 50px;
+	border-radius: 10px;
+}
+
+.dealer-hand-wrapper{
+	/* border: 5px dashed #f46f92; */
+}
+
+.player-hand-wrapper{
+	/* border: 5px dashed #146ff2; */
 }
 
 .card{
 	height: 120px;
-	background-color: #fff;
-	color: black;
+	background-color: white;
+	/* border: #277714 10px solid; */
 	margin: 10px;
 	width: 12.6%;
 	float: left;

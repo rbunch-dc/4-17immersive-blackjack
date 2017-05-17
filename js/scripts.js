@@ -1,159 +1,104 @@
 $(document).ready(function(){
-	// console.log("Sanity Check");
-	//-----------------------------
-	//----Main function vars-------
-	//-----------------------------
+	// console.log("Sanity Check")
+
+	/////////////////////////
+	//////MAIN VARIABLES/////
+	/////////////////////////
+	// A fresh, perfect ordered deck of cards
 	const freshDeck = createDeck();
-	var theDeck = freshDeck;
-	// console.log(freshDeck);
-	var playersHand = []; //same as player1Square in tic tac toe
-	var dealersHand = [];	
+	// We will keep all player/dealer cards in this array
+	var playersHand = [];
+	var dealersHand = [];
+	var theDeck = freshDeck.slice();
+
+	/////////////////////////
+	//////EVENT HANDLERS/////
+	/////////////////////////
+	$('.deal-button').click(function(){
+		// The deal stuff happens here...
+		// Here, theDeck is still a copy of freshDeck
+		shuffleDeck();
+		// Here, theDeck is shuffled, no longer in order of freshDeck
+		// console.log(theDeck);
+		// console.log(freshDeck);
+
+		// We have a shuffled deck, add the 1 and 3rd card to the playersHand and the DOM
+		// Do the same for the dealer
+		playersHand.push(theDeck.shift()); //Remove top card from theDeck and give to player
+		dealersHand.push(theDeck.shift()); //Remove (next) top card and give to dealer
+		playersHand.push(theDeck.shift()); //Remove (next) top card and give to player
+		dealersHand.push(theDeck.shift()); //Remove (next) top card and give to dealer
+
+		// Chnage the DOM to add teh images
+		// placeCard(DoM name of who, card-X for slot, card value to send)
+		placeCard('player',1,playersHand[0]);
+		placeCard('player',2,playersHand[1]);
+
+		placeCard('dealer',1,dealersHand[0]);
+		placeCard('dealer',2,dealersHand[1]);
+
+	});
+
+	$('.hit-button').click(function(){
+		// Hit functionallity...
+	});
+
+	$('.stand-button').click(function(){
+		// On click stand...
+	});
+
+	/////////////////////////////////////////////////
+	//////////////UTILITY FUNCTIONS//////////////////
+	/////////////////////////////////////////////////
+	function placeCard(who, where, what){
+		// Find the DOM element, based on the args, that we want to change
+		// i.e., find the element that we want to put the image in
+		var slotForCard = '.' + who + '-cards .card-' + where; 
+		// console.log(slotForCard);
+		imageTag = '<img src="images/cards/'+what+'.png">';
+		$(slotForCard).html(imageTag)
+	}
+
 
 	function createDeck(){
-		// local var, newDeck. No one knows abotu this, but me (createDeck)
 		var newDeck = [];
-		// local var that WILL NOT be changed, no one can see it but me!
-		const suits = ['h','s','d','c'];
-		// loop for suits (outter loop)	
+		// Two loops, one for suit, one for card value
+		var suits = ['h','s','d','c'];
+		// Outter loop which iterates the suit/letter...
 		for(let s = 0; s < suits.length; s++){
-			// loop for card values (inner loop)
+			// Inner Loop which iterates the values/Number
 			for(let c = 1; c <= 13; c++){
-				newDeck.push(c + suits[s]);
+				// Push onto newDeck array, the value[c] + suit[s]
+				newDeck.push(c+suits[s]);
+				// s = 0, c = 1
+				// s = 0, c = 2
+				// s = 0, c = 3...
+				// s = 0, c = 13
+
+				// s = 1, c = 1
+				// s = 1, c = 2
+				// s = 1, c = 3 ...
+				// s = 1, c = 13
+
+				// s = 2, c = 1
 			}
 		}
 		return newDeck;
 	}
 
-	$('.deal-button').click(function(){
-		reset();
-		console.log("User clicked Deal!!");
-		theDeck = shuffleDeck();
-		// the deck is now shuffled big time!
-		// Update the player and dealers hand
-		// The player ALWAYS gets the first card in teh deck.
-		var removedCard = theDeck.shift()
-		playersHand.push(removedCard);
-
-		removedCard = theDeck.shift()
-		dealersHand.push(removedCard);
-
-		removedCard = theDeck.shift()
-		playersHand.push(removedCard);
-
-		removedCard = theDeck.shift()
-		dealersHand.push(removedCard);
-
-		console.log(theDeck.length);
-		placeCard('player',1,playersHand[0]);
-		placeCard('dealer',1,dealersHand[0]);
-		placeCard('player',2,playersHand[1]);
-		placeCard('dealer',2,dealersHand[1]);
-
-		calculateTotal(playersHand, 'player');
-		calculateTotal(dealersHand, 'dealer');
-
-	});
-
-	$('.hit-button').click(function(){
-		console.log("User clicked hit")
-		playersHand.push(theDeck.shift());
-		placeCard('player',playersHand.length,playersHand[playersHand.length-1])
-		calculateTotal(playersHand,'player');
-	});
-
-	$('.stand-button').click(function(){
-		// console.log("User clicked on stand!");
-		// What happens to the player when they stand?
-		// Nothing.
-		// Control goes to the dealer.
-		// RUles of BlackJack for dealer:
-		// - if I have less than 17, I MUST hit.
-		// - if I have 17 or more I CANNOT hit.
-		var dealerTotal = calculateTotal(dealersHand, 'dealer');
-		// console.log(dealerTotal);
-		while(dealerTotal < 17){
-			dealersHand.push(theDeck.shift());
-			placeCard('dealer',dealersHand.length,dealersHand[dealersHand.length-1])
-			dealerTotal = calculateTotal(dealersHand, 'dealer');
+	function shuffleDeck(){
+		// Swap 2 elements in the array many, many times to shuffle.
+		for(let i = 0; i < 14000; i++){
+			var random1 = Math.floor(Math.random() * 52);
+			var random2 = Math.floor(Math.random() * 52);
+			// Store in temp, the value at index random1, in array theDeck (for later)
+			var temp = theDeck[random1];
+			// Overwrite what's at index random1 with what's at index random2
+			theDeck[random1] = theDeck[random2];
+			// Overwrite what's at index random2 with what's in temp
+			theDeck[random2] = temp;
 		}
-		checkWin();
-	});
-
-	function checkWin(){
-		var playerTotal = calculateTotal(playersHand, 'player');
-		var dealerTotal = calculateTotal(playersHand, 'dealer');
-
-		// if player > 21 ... player busts and loses.
-		// If dealer > 21 ... dealer busts and losers.
-		// if playersHand.length = 2 AND playerTotal = 21... BLACKJACK
-		// if dealersHand.length = 2 AND dealerTotal = 21... BLACKJACK
-		// if player > dealer ... player wins
-		// if dealer > player ... dealer wins
-		// else... tie.
 	}
-
-	function calculateTotal(hand,who){
-		// console.log(hand);
-		// init total at 0;
-		var total = 0;
-		// create a temp value for this card's value
-		var thisCardValue = 0;
-		// Loop through the hand (array)
-		// Grab the number in the element and add it the total
-		for(let i = 0; i < hand.length; i++){
-			thisCardValue = Number(hand[i].slice(0,-1));
-			// console.log(thisCardValue);
-			total += thisCardValue
-		}
-
-		console.log(total);
-		var classSelector = '.' + who + '-total';
-		$(classSelector).html(total);
-		return total;
-	}
-
-	function placeCard(who,where,cardToPlace){
-		var classSelector = '.' + who + '-cards .card-' + where;
-		// console.log(classSelector)
-		$(classSelector).html('<img src="cards/'+cardToPlace+'.png">');
-	}
-
-	var shuffleDeck = function(){
-		// Loop a big number of times. 
-		// Each time through, switch two elements in the array.
-		// When loop is done, array will be shuffled
-		for (let i = 0; i < 50000; i++){
-			var randomCard1 = Math.floor(Math.random() * theDeck.length);
-			var randomCard2 = Math.floor(Math.random() * theDeck.length);
-			// switch theDeck[randomCard1] with theDeck[randomCard2]
-			// Stash the value of theDeck[randomCard1] in temp
-			// so we can get it back
-
-			// console.log(theDeck[randomCard1])
-			// console.log(theDeck[randomCard2])
-
-			var temp = theDeck[randomCard1];
-			// Now it's safe to overwrite theDeck[randomCard1]
-			// because we stashed it's value in temp
-			theDeck[randomCard1] = theDeck[randomCard2];
-			// Now we are ready ot overwrite theDeck[randomCard2]
-			// We will use theDeck[randomCard1], which we stashed in temp
-			theDeck[randomCard2] = temp;
-
- 		}
- 		return theDeck;
-	}
-
-	function reset(){
-		theDeck = freshDeck;
-		playersHand = [];
-		dealersHand = [];
-		$('.card').html('');
-		playerTotal = calculateTotal(playersHand,'player');
-		dealerTotal = calculateTotal(dealersHand,'player');
-	}
-
 });
 
-// This will error!!
-// console.log(createDeck);
+
